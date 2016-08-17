@@ -33,13 +33,14 @@ import re
 
 #from PySide.QtCore import *
 #from PySide.QtGui import *
-from PyQt4 import *
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+#from PyQt4 import *
+#from PyQt4.QtCore import *
+#from PyQt4.QtGui import *
 
-#from python_qt_binding import  *
-#from python_qt_binding.QtCore import  *
-#from python_qt_binding.QtGui import  *
+from python_qt_binding import  *
+from python_qt_binding.QtCore import  *
+from python_qt_binding.QtGui import  *
+from python_qt_binding.QtWidgets import *
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #-- Drawing Classes --#
@@ -1339,6 +1340,9 @@ class DotWidget(QWidget):
 
     filter = 'dot'
 
+    clickSignal = Signal(str, object)
+    rightclickSignal = Signal(str, object)
+
     def __init__(self,  parent=None):
         super(DotWidget,  self).__init__(parent)
         self.graph = Graph()
@@ -1634,9 +1638,11 @@ class DotWidget(QWidget):
             x, y = event.x(), event.y()
             url = self.get_url(x, y)
             if url is not None:
-                self.emit(SIGNAL("clicked"), unicode(url.url), event)
+                self.clickSignal.emit(unicode(url.url),event)
+                #self.emit(SIGNAL("clicked"), unicode(url.url), event)
             else:
-                self.emit(SIGNAL("clicked"), 'none', event)
+                self.clickSignal.emit('none',event)
+               # self.emit(SIGNAL("clicked"), 'none', event)
                 jump = self.get_jump(x, y)
                 if jump is not None:
                     self.animate_to(jump.x, jump.y)
@@ -1647,9 +1653,11 @@ class DotWidget(QWidget):
             x, y = event.x(), event.y()
             url = self.get_url(x, y)
             if url is not None:
-                self.emit(SIGNAL("right_clicked"), unicode(url.url), event)
+                self.rightclickSignal.emit(unicode(url.url), event)
+                #self.emit(SIGNAL("right_clicked"), unicode(url.url), event)
             else:
-                self.emit(SIGNAL("right_clicked"), 'none', event)
+                self.rightclickSignal.emit('none',event)
+                #self.emit(SIGNAL("right_clicked"), 'none', event)
                 jump = self.get_jump(x, y)
                 if jump is not None:
                     self.animate_to(jump.x, jump.y)
